@@ -3,6 +3,7 @@ using SlidespielApi.Endpoints;
 using SlidespielApi.Endpoints.Videos;
 using SlidespielApi.Infrastructure;
 using SlidespielApi.Services;
+using SlidespielApi.Services.VideoProcessing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,10 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<FileUploadOperationFilter>();
 });
 
+builder.Services.AddHttpClient<IVideoDownloadService, VideoDownloadService>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
 builder.Services.AddSingleton<IFileStorageService, FileStorageService>();
 builder.Services.AddSingleton<IPowerPointParser, PowerPointParser>();
 

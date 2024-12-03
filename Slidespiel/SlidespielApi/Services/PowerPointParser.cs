@@ -1,42 +1,46 @@
 using DocumentFormat.OpenXml.Packaging;
 using SlidespielApi.Endpoints.Videos.Models;
+using SlidespielApi.Services.VideoProcessing;
 
 namespace SlidespielApi.Services;
 
-public class PowerPointParser : IPowerPointParser
+public class PowerPointParser(IVideoDownloadService videoDownloadService) : IPowerPointParser
 {
     public async Task<List<SlideVideosDto>> ExtractVideosAsync(string filePath)
     {
         var result = new List<SlideVideosDto>();
+        var downloadFolder = Path.Combine(Directory.GetCurrentDirectory(), "DownloadedVideos");
 
         using var document = PresentationDocument.Open(filePath, false);
-        
+
         if (document.PresentationPart is null)
         {
             return result;
         }
-        
+
         var slideNumber = 1;
         foreach (var slidePart in document.PresentationPart.SlideParts)
         {
             var videos = new List<VideoInfoDto>();
-            
+
             foreach (var relationship in slidePart.HyperlinkRelationships)
             {
-                if (!IsVideoFile(relationship.Uri.OriginalString))
+                var videoUrl = relationship.Uri.OriginalString;
+                var localFilePath = await videoDownloadService.DownloadVideoAsync(videoUrl, downloadFolder);
+
+                if (!IsVideoFile(localFilePath))
                 {
                     continue;
                 }
-                var fileName = Path.GetFileName(relationship.Uri.OriginalString);
-
+                
                 videos.Add(new VideoInfoDto
                 {
-                    FileName = fileName,
-                    FilePath = relationship.Uri.OriginalString,
-                    Duration = await GetVideoDurationAsync(relationship.Uri.OriginalString)
+                    FileName = Path.GetFileName(localFilePath),
+                    FilePath = localFilePath,
+                    Duration = await GetVideoDurationAsync(localFilePath)
                 });
             }
-            
+
             if (videos.Count > 0)
             {
                 result.Add(new SlideVideosDto
