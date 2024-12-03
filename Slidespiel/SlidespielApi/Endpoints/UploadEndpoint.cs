@@ -1,3 +1,5 @@
+using SlidespielApi.Services;
+
 namespace SlidespielApi.Endpoints;
 
 public static class UploadEndpoint
@@ -31,7 +33,12 @@ public static class UploadEndpoint
             {
                 return Results.StatusCode(500);
             }
-        }).DisableAntiforgery();
+        }).WithName("UploadPresentation")
+        .WithTags("PowerPoint API")
+        .Produces(200)
+        .Produces(400)
+        .Produces(500)
+        .DisableAntiforgery();
 
         return app;
     }

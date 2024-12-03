@@ -1,4 +1,6 @@
-namespace SlidespielApi.Endpoints;
+using SlidespielApi.Endpoints;
+
+namespace SlidespielApi.Services;
 
 public class FileStorageService : IFileStorageService
 {
@@ -26,5 +28,10 @@ public class FileStorageService : IFileStorageService
         await file.CopyToAsync(stream);
 
         return filePath;
+    }
+    
+    public Task<bool> FileExistsAsync(string filePath)
+    {
+        return Task.FromResult(File.Exists(filePath));
     }
 }

@@ -7,11 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="DocumentFormat.OpenXml" Version="3.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Models\" />
       <Folder Include="Uploads\" />
     </ItemGroup>
 

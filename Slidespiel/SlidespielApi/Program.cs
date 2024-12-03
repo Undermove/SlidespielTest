@@ -1,6 +1,8 @@
 using Microsoft.OpenApi.Models;
 using SlidespielApi.Endpoints;
+using SlidespielApi.Endpoints.Videos;
 using SlidespielApi.Infrastructure;
+using SlidespielApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddSingleton<IFileStorageService, FileStorageService>();
+builder.Services.AddSingleton<IPowerPointParser, PowerPointParser>();
 
 var app = builder.Build();
 
@@ -37,5 +40,6 @@ app.UseSwaggerUI(c =>
 app.UseHttpsRedirection();
 
 app.AddUploadEndpoint();
+app.AddVideosEndpoint();
 
 app.Run();
