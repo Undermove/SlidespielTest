@@ -4,7 +4,7 @@ namespace SlidespielApi.Endpoints;
 
 public static class UploadEndpoint
 {
-    public static WebApplication AddUploadEndpoint(this WebApplication app)
+    public static WebApplication AddUploadPresentationEndpoint(this WebApplication app)
     {
         app.MapPost("/upload", async (IFormFile file, IFileStorageService fileStorageService) =>
         {

@@ -4,7 +4,7 @@ using SlidespielApi.Services.VideoProcessing;
 
 namespace SlidespielApi.Services;
 
-public class PowerPointParser(IVideoDownloadService videoDownloadService) : IPowerPointParser
+public class PowerPointParser(IVideoDownloadService videoDownloadService, IVideoMetadataService metadataService) : IPowerPointParser
 {
     public async Task<List<SlideVideosDto>> ExtractVideosAsync(string filePath)
     {
@@ -33,11 +33,13 @@ public class PowerPointParser(IVideoDownloadService videoDownloadService) : IPow
                     continue;
                 }
                 
+                var duration = await metadataService.GetVideoDurationAsync(localFilePath);
+                
                 videos.Add(new VideoInfoDto
                 {
                     FileName = Path.GetFileName(localFilePath),
                     FilePath = localFilePath,
-                    Duration = await GetVideoDurationAsync(localFilePath)
+                    Duration = duration
                 });
             }
 

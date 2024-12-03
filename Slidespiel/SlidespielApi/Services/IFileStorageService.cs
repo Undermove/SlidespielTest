@@ -4,4 +4,5 @@ public interface IFileStorageService
 {
     Task<string> SaveFileAsync(IFormFile file);
     Task<bool> FileExistsAsync(string filePath);
+    Task<Stream> GetFileStreamAsync(string filePath);
 }

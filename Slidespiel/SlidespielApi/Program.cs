@@ -21,6 +21,7 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<FileUploadOperationFilter>();
 });
 
+builder.Services.AddSingleton<IVideoMetadataService, VideoMetadataService>();
 builder.Services.AddHttpClient<IVideoDownloadService, VideoDownloadService>(client =>
 {
     client.Timeout = TimeSpan.FromSeconds(30);
@@ -44,7 +45,8 @@ app.UseSwaggerUI(c =>
 
 app.UseHttpsRedirection();
 
-app.AddUploadEndpoint();
+app.AddUploadPresentationEndpoint();
 app.AddVideosEndpoint();
+app.AddDownloadVideoEndpoint();
 
 app.Run();
