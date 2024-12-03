@@ -1,6 +1,0 @@
-@SlidespielApi_HostAddress = http://localhost:5057
-
-GET {{SlidespielApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
