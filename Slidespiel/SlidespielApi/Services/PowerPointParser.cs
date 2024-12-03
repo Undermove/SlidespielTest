@@ -1,5 +1,5 @@
 using DocumentFormat.OpenXml.Packaging;
-using SlidespielApi.Endpoints.Videos;
+using SlidespielApi.Endpoints.Videos.Models;
 
 namespace SlidespielApi.Services;
 

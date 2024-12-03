@@ -1,4 +1,4 @@
-namespace SlidespielApi.Endpoints.Videos;
+namespace SlidespielApi.Endpoints.Videos.Models;
 
 public class SlideVideosDto
 {
