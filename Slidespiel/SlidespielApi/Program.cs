@@ -45,6 +45,26 @@ app.UseSwaggerUI(c =>
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<ExceptionsMiddleware>();
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+AppDomain.CurrentDomain.UnhandledException += (_, args) =>
+{
+    if (args.ExceptionObject is Exception exception)
+    {
+        logger.LogError(exception, "Unhandled exception occurred");
+    }
+    else
+    {
+        logger.LogError("Unhandled non-exception error occurred: {ExceptionObject}", args.ExceptionObject);
+    }
+};
+
+TaskScheduler.UnobservedTaskException += (_, args) =>
+{
+    logger.LogError(args.Exception, "Unobserved task exception occurred");
+    args.SetObserved();
+};
+
 app.AddUploadPresentationEndpoint();
 app.AddVideosEndpoint();
 app.AddDownloadVideoEndpoint();

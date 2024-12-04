@@ -4,7 +4,7 @@ using MediaToolkit.Model;
 namespace SlidespielApi.Services.VideoProcessing;
 
 
-public class VideoMetadataService : IVideoMetadataService
+public class VideoMetadataService(ILogger<VideoMetadataService> logger) : IVideoMetadataService
 {
     private readonly string _ffmpegTempPath = Path.Combine(Directory.GetCurrentDirectory(), "MediaToolkitTemp/ffmpeg");
 
@@ -19,12 +19,19 @@ public class VideoMetadataService : IVideoMetadataService
 
         return await Task.Run(() =>
         {
-            using var engine = new Engine(_ffmpegTempPath);
-            engine.GetMetadata(inputFile);
+            try
+            {
+                using var engine = new Engine(_ffmpegTempPath);
+                engine.GetMetadata(inputFile);
 
-            var duration = inputFile.Metadata.Duration;
-
-            return duration.ToString(@"hh\:mm\:ss");
+                var duration = inputFile.Metadata.Duration;
+                return duration.ToString(@"hh\:mm\:ss");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Exception: {VideoPath}", videoPath);
+                throw;
+            }
         });
     }
 }
